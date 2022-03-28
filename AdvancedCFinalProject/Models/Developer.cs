@@ -1,9 +1,9 @@
 ﻿using System;
 namespace AdvancedCFinalProject.Models
 {
-	public class Deveoper
+	public class Developer
 	{
-		public Deveoper()
+		public Developer()
 		{
 		}
 	}
