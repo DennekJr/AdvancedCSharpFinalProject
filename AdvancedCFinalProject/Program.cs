@@ -1,7 +1,14 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 var app = builder.Build();
 
