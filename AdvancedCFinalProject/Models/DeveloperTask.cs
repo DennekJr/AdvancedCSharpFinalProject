@@ -3,14 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdvancedCFinalProject.Models
 {
+	public class DeveloperTask
+	{
 		[Key]
-		public int ProjectId { get; set; }
+		public int TaskId { get; set; }
 		public string Title { get; set; }
-		public ICollection<DeveloperTask> Tasks { get; set; }
-
-		public Project()
+		public DeveloperTask()
 		{
-			Tasks = new HashSet<DeveloperTask>();
 		}
 	}
 }
