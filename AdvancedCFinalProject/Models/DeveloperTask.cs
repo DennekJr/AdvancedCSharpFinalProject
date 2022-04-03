@@ -8,6 +8,8 @@ namespace AdvancedCFinalProject.Models
 		[Key]
 		public int TaskId { get; set; }
 		public string Title { get; set; }
+
+		public int CompletionPercentage { get; set; } = 0;
 		public DeveloperTask()
 		{
 		}

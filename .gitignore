@@ -403,3 +403,5 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+/AdvancedCFinalProject/Migrations/20220401154229_updatedatabase.Designer.cs
+/AdvancedCFinalProject/Migrations/20220401154229_updatedatabase.cs

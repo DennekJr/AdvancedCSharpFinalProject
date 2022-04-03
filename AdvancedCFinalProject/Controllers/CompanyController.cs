@@ -8,12 +8,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedCFinalProject.Data;
 using AdvancedCFinalProject.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdvancedCFinalProject.Controllers
 {
     public class CompanyController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<IdentityUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
 
         public CompanyController(ApplicationDbContext context)
         {
@@ -149,6 +153,25 @@ namespace AdvancedCFinalProject.Controllers
         private bool CompanyExists(int id)
         {
             return _context.Company.Any(e => e.CompanyId == id);
+        }
+        [Authorize(Roles = "Project Manager")]
+        [HttpGet]
+        public IActionResult ProjDetails()
+        {
+            
+            return View(_context.Project);
+        }
+
+        [Authorize(Roles = "Project Manager")]
+        [HttpPost]
+        public IActionResult ProjDetails(int projId)
+        {
+            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(p => p.Tasks).First();
+            if(project == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(project);
         }
     }
 }
