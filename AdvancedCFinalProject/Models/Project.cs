@@ -7,18 +7,30 @@ namespace AdvancedCFinalProject.Models
 	{
 		[Key]
 		public int ProjectId { get; set; }
+
 		public string Title { get; set; }
+
 		[StringLength(150, MinimumLength = 3)]
 		public string Content { get; set; }
+
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
 		public DateTime CreatedTime { get; set; }
+
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
 		public DateTime Deadline { get; set; }
+
 		public int CompanyId { get; set; }
-		public Company Company { get; set; }
+
+		public Company Company { get; set; } 
+
+		public int CommentId { get; set; }
+
+		public Comment Comment { get; set; }
+
 		public Priority? Priority { get; set; }
+
 		public ICollection<DeveloperTask> Tasks { get; set; }
 		
 		public Project()
