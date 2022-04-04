@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model AdvancedCFinalProject.Models.Developer
+
+<h2>@Model.Title</h2>
+
+<div>
+    <form asp-action="ViewDeveloperTasks" method="post">
+        <ul>
+            @foreach (var devTasks in Model.Tasks)
+            {
+                <input type="hidden" name="devId" placeholder="Update Task Completion" value=@Model.DeveloperId />
+                <input type="hidden" name="taskId" placeholder="Update Task Completion" value=@devTasks.TaskId />
+                <li>@devTasks.Title</li>
+                @if (devTasks.CompletionRate == 100)
+                {
+                    <li>Completion Rate: Complete</li>
+                    <input type="text" name="comment" placeholder="Comment on Task...." />
+                    <button type="submit">Submit</button>
+                }
+                else
+                {
+                    <li>Completion Rate: @devTasks.CompletionRate</li>
+                        <input type="number" name="newRate" placeholder="Update Task Completion" />
+                        <div>Completed: <input id="responsable" type="checkbox" name="IsChecked" value="true" /></div>
+                        <button type="submit">Submit</button>
+                }
+            }
+        </ul>
+    </form>
+
+</div>
+

@@ -168,7 +168,7 @@ namespace AdvancedCFinalProject.Controllers
             {
                 return NotFound();
             }
-            var developer = db.Developers.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == DevId);
+            var developer = db.Developer.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == DevId);
             var devTasks = db.Tasks.FirstOrDefault(t => t.DeveloperId == developer.DeveloperId);
 
               
@@ -182,7 +182,7 @@ namespace AdvancedCFinalProject.Controllers
             {
                 return NotFound();
             }
-            var developer = db.Developers.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == devId);
+            var developer = db.Developer.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == devId);
             var devTask = db.Tasks.FirstOrDefault(t => t.TaskId == taskId);
             if(IsChecked == true)
             {

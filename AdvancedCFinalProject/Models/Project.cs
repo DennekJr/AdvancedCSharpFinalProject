@@ -16,6 +16,8 @@ namespace AdvancedCFinalProject.Models
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
 		public DateTime Deadline { get; set; }
+		public int CompanyId { get; set; }
+		public Company Company { get; set; }
 		public Priority? Priority { get; set; }
 		public ICollection<DeveloperTask> Tasks { get; set; }
 		

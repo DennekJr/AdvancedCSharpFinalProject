@@ -36,6 +36,7 @@ namespace AdvancedCFinalProject.Models
             IdentityUser user1 = new IdentityUser { Email = "sam@gmail.com", NormalizedEmail = "SAM@GMAIL.COM", UserName = "sam@gmail.com", EmailConfirmed = true };
             IdentityUser user2 = new IdentityUser { Email = "cat@gmail.com", NormalizedEmail = "CAT@GMAIL.COM", UserName = "cat@gmail.com", EmailConfirmed = true };
             IdentityUser user3 = new IdentityUser { Email = "andre@gmail.com", NormalizedEmail = "ANDRE@GMAIL.COM", UserName = "andre@gmail.com", EmailConfirmed = true };
+            IdentityUser user4 = new IdentityUser { Email = "manager@gmail.com", NormalizedEmail = "MANAGER@GMAIL.COM", UserName = "manager@gmail.com", EmailConfirmed = true };
 
             var hashedPassword2 = passwordHasher.HashPassword(user1, "P@ssword1");
             user1.PasswordHash = hashedPassword2;
@@ -51,6 +52,11 @@ namespace AdvancedCFinalProject.Models
             user3.PasswordHash = hashedPassword4;
             await userManager.CreateAsync(user3);
             await userManager.AddToRoleAsync(user3, "Developer");
+
+            var hashedPassword5 = passwordHasher.HashPassword(user4, "P@ssword3");
+            user4.PasswordHash = hashedPassword5;
+            await userManager.CreateAsync(user4);
+            await userManager.AddToRoleAsync(user4, "Project Manager");
 
             context.SaveChanges();
         }

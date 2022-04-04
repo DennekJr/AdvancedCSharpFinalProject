@@ -12,7 +12,7 @@ public class ApplicationDbContext : IdentityDbContext
     }
     public DbSet<Company> Company { get; set; }
     public DbSet<Project> Project { get; set; }
-    public DbSet<Developer> Developers { get; set; }
+    public DbSet<Developer> Developer { get; set; }
     public DbSet<DeveloperTask> Tasks { get; set; }
     public DbSet<Comment> Comments { get; set; }
 }
