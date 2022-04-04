@@ -33,5 +33,18 @@ namespace AdvancedCFinalProject.Helpers
             }
             catch (Exception ex) { }
         }
+
+        public void UpdateProject(int? id, string? title, bool? IsComplete)
+        {
+
+            try
+            {
+                Project ProjectToUpdate = db.Project.First(p => p.ProjectId == id);
+                ProjectToUpdate.Title = title;
+                ProjectToUpdate.IsComplete = (bool)IsComplete;
+            }
+            catch (Exception ex) { }
+
+        }
     }
 }

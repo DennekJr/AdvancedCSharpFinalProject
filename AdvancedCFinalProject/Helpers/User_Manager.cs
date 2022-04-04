@@ -5,7 +5,7 @@ namespace AdvancedCFinalProject.Helpers
 {
     public class User_Manager
     {
-        private readonly ApplicationDbContext db;
+        private static ApplicationDbContext db;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<IdentityUser> userManager;
 
@@ -18,11 +18,22 @@ namespace AdvancedCFinalProject.Helpers
             userManager = _userManager;
         }
 
-        public List<IdentityUser> AllUsers()
+        public async Task<List<IdentityUser>> AllUsersInRole(string? role)
         {
             try
             {
-                List<IdentityUser> users = db.Users.ToList();
+                List<IdentityUser> users = new List<IdentityUser>();
+                if (role != null)
+                {
+                    foreach(var user in db.Users)
+                    {
+                        bool userIsInRole = await userManager.IsInRoleAsync(user, role);
+                        if (userIsInRole)
+                        {
+                            users.Add(user);
+                        }
+                    }
+                }
                 return users;
             }
             catch (Exception ex)

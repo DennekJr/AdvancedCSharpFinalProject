@@ -8,6 +8,7 @@ namespace AdvancedCFinalProject.Models
 		[Key]
 		public int ProjectId { get; set; }
 		public string Title { get; set; }
+		public bool IsComplete { get; set; }
 		public ICollection<DeveloperTask> Tasks { get; set; }
 
 		public Project()
