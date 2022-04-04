@@ -47,8 +47,14 @@ namespace AdvancedCFinalProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeveloperId"), 1L, 1);
 
+                    b.Property<int>("CompletionRate")
+                        .HasColumnType("int");
+
                     b.Property<int>("DeveloperTaskId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -58,7 +64,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("DeveloperTaskId");
 
-                    b.ToTable("Developer");
+                    b.ToTable("Developers");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
