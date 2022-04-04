@@ -4,6 +4,7 @@ using AdvancedCFinalProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220404185520_AddManagerToProjectClass")]
+    partial class AddManagerToProjectClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,6 +99,9 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -104,6 +109,8 @@ namespace AdvancedCFinalProject.Migrations
                     b.HasKey("ProjectId");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("ManagerId");
 
                     b.ToTable("Project");
                 });
@@ -333,6 +340,12 @@ namespace AdvancedCFinalProject.Migrations
                     b.HasOne("AdvancedCFinalProject.Models.Company", null)
                         .WithMany("Projects")
                         .HasForeignKey("CompanyId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

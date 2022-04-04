@@ -16,7 +16,7 @@ namespace AdvancedCFinalProject.Helpers
         {
             try
             {
-                Project project = new Project { Title = title };
+                Project project = new Project { Title = title, IsComplete = false};
                 db.Project.Add(project);
                 db.SaveChanges();
             }
