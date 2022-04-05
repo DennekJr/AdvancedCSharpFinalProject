@@ -16,7 +16,7 @@ namespace AdvancedCFinalProject.Helpers
         {
             try
             {
-                Project project = new Project { Title = title };
+                Project project = new Project { Title = title, IsComplete = false};
                 db.Project.Add(project);
                 db.SaveChanges();
             }
@@ -32,6 +32,19 @@ namespace AdvancedCFinalProject.Helpers
                 db.SaveChanges();
             }
             catch (Exception ex) { }
+        }
+
+        public void UpdateProject(int? id, string? title, bool? IsComplete)
+        {
+
+            try
+            {
+                Project ProjectToUpdate = db.Project.First(p => p.ProjectId == id);
+                ProjectToUpdate.Title = title;
+                ProjectToUpdate.IsComplete = (bool)IsComplete;
+            }
+            catch (Exception ex) { }
+
         }
     }
 }
