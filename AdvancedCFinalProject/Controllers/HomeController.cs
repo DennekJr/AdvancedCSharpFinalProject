@@ -10,14 +10,12 @@ namespace AdvancedCFinalProject.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDbContext db;
-    User_Manager user_Manager;
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext _db)
+
+    public HomeController(ILogger<HomeController> logger)
     {
-        user_Manager = new User_Manager();
         _logger = logger;
-        db = _db;
     }
+
 
     public IActionResult Index()
     {
