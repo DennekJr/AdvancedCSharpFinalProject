@@ -166,12 +166,18 @@ namespace AdvancedCFinalProject.Controllers
         [HttpPost]
         public IActionResult ProjDetails(int projId)
         {
-            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(p => p.Tasks).First();
+            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(t => t.Tasks).First();
             if(project == null)
             {
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
+        }
+        [Authorize(Roles = "Project Manager")]
+        public IActionResult ProjManagerDashboard(string userId)
+        {
+            IdentityUser user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            return View(user);
         }
     }
 }
