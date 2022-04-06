@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AdvancedCFinalProject.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class April5Test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,19 @@ namespace AdvancedCFinalProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Company", x => x.CompanyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Developer",
+                columns: table => new
+                {
+                    DeveloperId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Developer", x => x.DeveloperId);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,7 +187,12 @@ namespace AdvancedCFinalProject.Migrations
                     ProjectId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyId = table.Column<int>(type: "int", nullable: true)
+                    Content = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -183,7 +201,8 @@ namespace AdvancedCFinalProject.Migrations
                         name: "FK_Project_Company_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Company",
-                        principalColumn: "CompanyId");
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -193,11 +212,20 @@ namespace AdvancedCFinalProject.Migrations
                     TaskId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompletionRate = table.Column<int>(type: "int", nullable: true),
+                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    DeveloperId = table.Column<int>(type: "int", nullable: true),
                     ProjectId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Developer_DeveloperId",
+                        column: x => x.DeveloperId,
+                        principalTable: "Developer",
+                        principalColumn: "DeveloperId");
                     table.ForeignKey(
                         name: "FK_Tasks_Project_ProjectId",
                         column: x => x.ProjectId,
@@ -206,23 +234,42 @@ namespace AdvancedCFinalProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Developer",
+                name: "Comments",
                 columns: table => new
                 {
-                    DeveloperId = table.Column<int>(type: "int", nullable: false)
+                    CommentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    TaskId = table.Column<int>(type: "int", nullable: true),
+                    DeveloperId = table.Column<int>(type: "int", nullable: false),
                     DeveloperTaskId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Developer", x => x.DeveloperId);
+                    table.PrimaryKey("PK_Comments", x => x.CommentId);
                     table.ForeignKey(
-                        name: "FK_Developer_Tasks_DeveloperTaskId",
+                        name: "FK_Comments_Developer_DeveloperId",
+                        column: x => x.DeveloperId,
+                        principalTable: "Developer",
+                        principalColumn: "DeveloperId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "ProjectId");
+                    table.ForeignKey(
+                        name: "FK_Comments_Tasks_DeveloperTaskId",
                         column: x => x.DeveloperTaskId,
                         principalTable: "Tasks",
                         principalColumn: "TaskId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "TaskId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -265,14 +312,34 @@ namespace AdvancedCFinalProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Developer_DeveloperTaskId",
-                table: "Developer",
+                name: "IX_Comments_DeveloperId",
+                table: "Comments",
+                column: "DeveloperId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_DeveloperTaskId",
+                table: "Comments",
                 column: "DeveloperTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ProjectId",
+                table: "Comments",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_TaskId",
+                table: "Comments",
+                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_CompanyId",
                 table: "Project",
                 column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_DeveloperId",
+                table: "Tasks",
+                column: "DeveloperId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ProjectId",
@@ -298,7 +365,7 @@ namespace AdvancedCFinalProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Developer");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -308,6 +375,9 @@ namespace AdvancedCFinalProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tasks");
+
+            migrationBuilder.DropTable(
+                name: "Developer");
 
             migrationBuilder.DropTable(
                 name: "Project");

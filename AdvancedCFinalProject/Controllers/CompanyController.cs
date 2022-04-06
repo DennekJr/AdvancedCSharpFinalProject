@@ -8,22 +8,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedCFinalProject.Data;
 using AdvancedCFinalProject.Models;
+using AdvancedCFinalProject.Helpers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdvancedCFinalProject.Controllers
 {
     public class CompanyController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext db;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public CompanyController(ApplicationDbContext context)
+        User_Manager user_Manager;
+
+        public CompanyController(ILogger<HomeController> logger, ApplicationDbContext _db, RoleManager<IdentityRole> _roleManager, UserManager<IdentityUser> _userManager)
         {
-            _context = context;
+            db = _db;
+            roleManager = _roleManager;
+            userManager = _userManager;
         }
 
         // GET: Company
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Company.ToListAsync());
+            return View(await db.Company.ToListAsync());
         }
 
         // GET: Company/Details/5
@@ -34,8 +45,10 @@ namespace AdvancedCFinalProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Company
+            var company = await db.Company.Include(x => x.Projects)
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
+            var projectsForCompany = db.Project.Include(t => t.Tasks).Where(x => x.CompanyId == id);
+            ViewBag.companyProject = projectsForCompany;
             if (company == null)
             {
                 return NotFound();
@@ -59,8 +72,8 @@ namespace AdvancedCFinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(company);
-                await _context.SaveChangesAsync();
+                db.Company.Add(company);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
@@ -74,7 +87,7 @@ namespace AdvancedCFinalProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Company.FindAsync(id);
+            var company = await db.Company.FindAsync(id);
             if (company == null)
             {
                 return NotFound();
@@ -98,8 +111,8 @@ namespace AdvancedCFinalProject.Controllers
             {
                 try
                 {
-                    _context.Update(company);
-                    await _context.SaveChangesAsync();
+                    db.Update(company);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,7 +138,7 @@ namespace AdvancedCFinalProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Company
+            var company = await db.Company
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
             if (company == null)
             {
@@ -140,15 +153,77 @@ namespace AdvancedCFinalProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var company = await _context.Company.FindAsync(id);
-            _context.Company.Remove(company);
-            await _context.SaveChangesAsync();
+            var company = await db.Company.FindAsync(id);
+            db.Company.Remove(company);
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CompanyExists(int id)
         {
-            return _context.Company.Any(e => e.CompanyId == id);
+            return db.Company.Any(e => e.CompanyId == id);
         }
+
+        public async Task<IActionResult> ViewDeveloperTasks(int? DevId)
+        {
+            if (DevId == null)
+            {
+                return NotFound();
+            }
+            var developer = db.Developer.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == DevId);
+            var devTasks = db.Tasks.FirstOrDefault(t => t.DeveloperId == developer.DeveloperId);
+
+              
+            return View(developer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewDeveloperTasks(int devId, int taskId, int? newRate, string? comment, bool? IsChecked = false)
+        {
+            if (devId == null)
+            {
+                return NotFound();
+            }
+            var developer = db.Developer.Include(t => t.Tasks).FirstOrDefault(dev => dev.DeveloperId == devId);
+            var devTask = db.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+            if(IsChecked == true)
+            {
+                devTask.IsComplete = true;
+
+            } else
+            {
+                devTask.CompletionRate = newRate;
+            }
+            if(comment != null)
+            {
+                Comment newComment = new Comment
+                {
+                    Description = comment,
+                    DeveloperId = devId,
+                    DeveloperTaskId = taskId,
+                };
+                db.Comments.Add(newComment);
+                developer.Comments.Add(newComment);
+                await db.SaveChangesAsync();
+            }
+
+            return View(devTask);
+        }
+
+        [Authorize(Roles = "Project Manager")]
+        public async Task<IActionResult> TaskManager(string? id, int? addId, int? deleteId, int? editId, int? assignId)
+        {
+            IdentityUser user = await userManager.FindByIdAsync(id);
+            string role = "Project Manager";
+            bool userIsInRole = await userManager.IsInRoleAsync(user, role);
+            // get method
+            // post method of task manager
+            if (userIsInRole)
+            {
+                return RedirectToAction("ActionOrViewName", "TaskController");
+            }
+            return View();
+        }
+
     }
 }
