@@ -40,12 +40,21 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<int>("DeveloperTaskId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("int");
+
                     b.HasKey("CommentId");
 
                     b.HasIndex("DeveloperId");
 
-                    b.HasIndex("DeveloperTaskId")
-                        .IsUnique();
+                    b.HasIndex("DeveloperTaskId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("TaskId");
 
                     b.ToTable("Comments");
                 });
@@ -142,11 +151,11 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Priority")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -370,14 +379,26 @@ namespace AdvancedCFinalProject.Migrations
                         .IsRequired();
 
                     b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "DeveloperTask")
-                        .WithOne("Comment")
-                        .HasForeignKey("AdvancedCFinalProject.Models.Comment", "DeveloperTaskId")
+                        .WithMany()
+                        .HasForeignKey("DeveloperTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+
+                    b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId");
 
                     b.Navigation("Developer");
 
                     b.Navigation("DeveloperTask");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
@@ -465,11 +486,6 @@ namespace AdvancedCFinalProject.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Tasks");
-                });
-
-            modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
-                {
-                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>

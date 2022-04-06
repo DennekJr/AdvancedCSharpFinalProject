@@ -11,7 +11,7 @@ namespace AdvancedCFinalProject.Models
 		public int? CompletionRate { get; set; }
 		public bool IsComplete { get; set; } = false;
 		public Priority Priority { get; set; }
-		public Comment? Comment { get; set; }
+		//public Comment? Comment { get; set; }
 		public int? DeveloperId { get; set; }
 		public Developer? Developer { get; set; }
 		public DeveloperTask()

@@ -45,8 +45,10 @@ namespace AdvancedCFinalProject.Controllers
                 return NotFound();
             }
 
-            var company = await db.Company
+            var company = await db.Company.Include(x => x.Projects)
                 .FirstOrDefaultAsync(m => m.CompanyId == id);
+            var projectsForCompany = db.Project.Include(t => t.Tasks).Where(x => x.CompanyId == id);
+            ViewBag.companyProject = projectsForCompany;
             if (company == null)
             {
                 return NotFound();

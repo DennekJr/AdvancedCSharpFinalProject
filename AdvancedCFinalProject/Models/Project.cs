@@ -23,11 +23,9 @@ namespace AdvancedCFinalProject.Models
 
 		public int CompanyId { get; set; }
 
+		public bool IsComplete { get; set; }
+
 		public Company Company { get; set; } 
-
-		public int CommentId { get; set; }
-
-		public Comment Comment { get; set; }
 
 		public Priority? Priority { get; set; }
 

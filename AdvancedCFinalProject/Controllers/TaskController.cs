@@ -8,16 +8,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedCFinalProject.Data;
 using AdvancedCFinalProject.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdvancedCFinalProject.Controllers
 {
     public class TaskController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public TaskController(ApplicationDbContext context)
+        public TaskController(ApplicationDbContext context, UserManager<IdentityUser> _userManager, RoleManager<IdentityRole> _roleManager)
         {
             _context = context;
+            userManager = _userManager;
+            roleManager = _roleManager;
         }
 
         // GET: Task
@@ -47,9 +52,23 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         // GET: Task/Create
-        public IActionResult Create()
+        public IActionResult Create(string? selectedDev,int? Pid)
         {
-            ViewData["DeveloperId"] = new SelectList(_context.Developer, "DeveloperId", "DeveloperId");
+            Project project = _context.Project.FirstOrDefault(x => x.ProjectId == Pid);
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
+            //var developers = new List<string>();
+            List<SelectListItem> developers = new List<SelectListItem>();
+            foreach (var name in _context.Users)
+            {
+                developers.Add(new SelectListItem
+                {
+                    Text = name.Email.ToString(),
+                    Value = name.Id,
+                });
+            }
+
+            ViewBag.Developers = developers;
+            ViewBag.ProjectId = Pid;
             return View();
         }
 
@@ -58,15 +77,36 @@ namespace AdvancedCFinalProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TaskId,Title,CompletionRate,IsComplete,Priority,DeveloperId")] DeveloperTask developerTask)
+        public async Task<IActionResult> Create(string? selectedDev, int? Pid,[Bind("TaskId,Title,CompletionRate,IsComplete,Priority,DeveloperId")] DeveloperTask developerTask)
         {
+            ViewBag.ProjectId = Pid;
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
+
+            List<SelectListItem> developers = new List<SelectListItem>();
+            foreach (var name in _context.Users)
+            {
+                developers.Add(new SelectListItem
+                {
+                    Text = name.Email.ToString(),
+                    Value = name.Id,
+                });
+            }
+            IdentityUser user = _context.Users.FirstOrDefault(x => x.Id == selectedDev);
+            Developer newDev = new Developer
+            {
+                Title = user.Email,
+            };
+            developerTask.Developer = newDev;
+            ViewBag.Developers = developers;
+            Project project = _context.Project.FirstOrDefault(x => x.ProjectId == Pid);
+
             if (ModelState.IsValid)
             {
                 _context.Add(developerTask);
+                project.Tasks.Add(developerTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeveloperId"] = new SelectList(_context.Developer, "DeveloperId", "DeveloperId", developerTask.DeveloperId);
             return View(developerTask);
         }
 
@@ -77,7 +117,7 @@ namespace AdvancedCFinalProject.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             var developerTask = await _context.Tasks.FindAsync(id);
             if (developerTask == null)
             {
@@ -98,7 +138,7 @@ namespace AdvancedCFinalProject.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             if (ModelState.IsValid)
             {
                 try

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AdvancedCFinalProject.Migrations
 {
-    public partial class newtaskmanager : Migration
+    public partial class April5Test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -190,8 +190,9 @@ namespace AdvancedCFinalProject.Migrations
                     Content = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: true),
-                    CompanyId = table.Column<int>(type: "int", nullable: true)
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -200,7 +201,8 @@ namespace AdvancedCFinalProject.Migrations
                         name: "FK_Project_Company_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Company",
-                        principalColumn: "CompanyId");
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,6 +240,8 @@ namespace AdvancedCFinalProject.Migrations
                     CommentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    TaskId = table.Column<int>(type: "int", nullable: true),
                     DeveloperId = table.Column<int>(type: "int", nullable: false),
                     DeveloperTaskId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -251,11 +255,21 @@ namespace AdvancedCFinalProject.Migrations
                         principalColumn: "DeveloperId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Comments_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "ProjectId");
+                    table.ForeignKey(
                         name: "FK_Comments_Tasks_DeveloperTaskId",
                         column: x => x.DeveloperTaskId,
                         principalTable: "Tasks",
                         principalColumn: "TaskId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "TaskId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -305,8 +319,17 @@ namespace AdvancedCFinalProject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_DeveloperTaskId",
                 table: "Comments",
-                column: "DeveloperTaskId",
-                unique: true);
+                column: "DeveloperTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ProjectId",
+                table: "Comments",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_TaskId",
+                table: "Comments",
+                column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_CompanyId",
