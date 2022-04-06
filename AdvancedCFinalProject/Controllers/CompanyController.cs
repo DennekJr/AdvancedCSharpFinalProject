@@ -150,5 +150,30 @@ namespace AdvancedCFinalProject.Controllers
         {
             return _context.Company.Any(e => e.CompanyId == id);
         }
+        [Authorize(Roles = "Project Manager")]
+        [HttpGet]
+        public IActionResult ProjDetails()
+        {
+            
+            return View(_context.Project);
+        }
+
+        [Authorize(Roles = "Project Manager")]
+        [HttpPost]
+        public IActionResult ProjDetails(int projId)
+        {
+            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(t => t.Tasks).First();
+            if(project == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(project);
+        }
+        [Authorize(Roles = "Project Manager")]
+        public IActionResult ProjManagerDashboard()
+        {
+            List<Project> projects = _context.Project.Include(p => p.Tasks).ToList();
+            return View(projects);
+        }
     }
 }
