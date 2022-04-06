@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdvancedCFinalProject.Data;
 using AdvancedCFinalProject.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdvancedCFinalProject.Controllers
 {
