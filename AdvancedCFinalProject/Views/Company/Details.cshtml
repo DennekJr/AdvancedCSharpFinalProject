@@ -19,7 +19,8 @@
             @Model.Title
         </dt>
         <dd class="col-sm-10">
-            <a asp-controller="Project" asp-action="Create" asp-route-id="@Model.CompanyId">Edit</a>
+            <a asp-controller="Project" asp-action="CreateProject" asp-route-Cid="@Model.CompanyId">Create new Project</a>
+
             @foreach (var proj in ViewBag.companyProject)
             {
                 <li>@proj.Title</li>
@@ -29,7 +30,7 @@
                 @foreach (DeveloperTask task in proj.Tasks)
                 {
                     <div>@task.Title</div>
-                    @if(task.Developer != null)
+                    @if (task.Developer != null)
                     {
                         <div>@task.Developer</div>
                     }

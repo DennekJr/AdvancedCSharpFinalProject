@@ -14,16 +14,21 @@ namespace AdvancedCFinalProject.Controllers
             db = context;
         }
 
-        public IActionResult CreateProject()
+        public IActionResult CreateProject(int? Cid)
         {
+            var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
+            ViewBag.Company = comp.CompanyId;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject([Bind("ProjectId,Title")] Project project)
+        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title")] Project project)
         {
+            var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
+            ViewBag.Company = comp;
             if (ModelState.IsValid)
             {
+                comp.Projects.Add(project);
                 db.Project.Add(project);
                 await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

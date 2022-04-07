@@ -12,6 +12,7 @@
     <div class="col-md-4">
         <form asp-action="CreateProject">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <a style="display: none" asp-route-Cid="@ViewBag.Company">Company</a>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
