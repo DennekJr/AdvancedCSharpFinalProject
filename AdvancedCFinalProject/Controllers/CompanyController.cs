@@ -225,5 +225,32 @@ namespace AdvancedCFinalProject.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Project Manager")]
+        [HttpGet]
+        public IActionResult ProjDetails()
+        {
+
+            return View(_context.Project);
+        }
+
+        [Authorize(Roles = "Project Manager")]
+        [HttpPost]
+        public IActionResult ProjDetails(int projId)
+        {
+            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(t => t.Tasks).First();
+            if (project == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(project);
+        }
+        [Authorize(Roles = "Project Manager")]
+        public IActionResult ProjManagerDashboard()
+        {
+            List<Project> projects = db.Project.Include(p => p.Tasks).ToList();
+            return View(projects);
+        }
+
+
     }
 }

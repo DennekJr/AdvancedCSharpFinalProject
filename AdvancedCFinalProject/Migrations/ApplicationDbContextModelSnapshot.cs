@@ -56,7 +56,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Company", b =>
@@ -73,7 +73,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company");
+                    b.ToTable("Company", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Developer", b =>
@@ -90,7 +90,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("DeveloperId");
 
-                    b.ToTable("Developer");
+                    b.ToTable("Developer", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
@@ -126,7 +126,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>
@@ -165,7 +165,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Project");
+                    b.ToTable("Project", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
