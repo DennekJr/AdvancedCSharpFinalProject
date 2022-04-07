@@ -32,7 +32,7 @@
                     <div>@task.Title</div>
                     @if (task.Developer != null)
                     {
-                        <div>@task.Developer</div>
+                        <div>@task.Developer.Title</div>
                     }
                     <a asp-controller="Task" asp-action="Edit" asp-route-id="@task.TaskId">Edit</a>
                     <a asp-controller="Task" asp-action="Details" asp-route-id="@task.TaskId">Details</a>
