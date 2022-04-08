@@ -25,7 +25,7 @@ namespace AdvancedCFinalProject.Models
 
 		public bool IsComplete { get; set; }
 
-		public Company Company { get; set; } 
+		public Company? Company { get; set; } 
 
 		public Priority? Priority { get; set; }
 
