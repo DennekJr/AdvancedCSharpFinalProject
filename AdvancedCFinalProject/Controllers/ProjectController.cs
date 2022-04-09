@@ -72,20 +72,30 @@ namespace AdvancedCFinalProject.Controllers
 
         }
         
+        public async Task<IActionResult> Index()
+        {
+            var applicationDbContext = db.Project;
+            ViewBag.NumOfNotifications = db.Notification.Where(n => n.projectId != null).Count();
+            return View(await applicationDbContext.ToListAsync());
+        }
+
         public IActionResult CreateProject(int? Cid)
         {
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
             ViewBag.Company = comp.CompanyId;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title")] Project project)
+        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority")] Project project)
         {
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
-            ViewBag.Company = comp;
+            ViewBag.Company = comp.CompanyId;
+            ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             if (ModelState.IsValid)
             {
+                project.CompanyId = comp.CompanyId;
                 comp.Projects.Add(project);
                 db.Project.Add(project);
                 await db.SaveChangesAsync();
@@ -160,36 +170,6 @@ namespace AdvancedCFinalProject.Controllers
         public IActionResult Details(int? id)
         {
             Project project = db.Project.Find(id);
-            return View(project);
-        }
-
-        public IActionResult Index()
-        {
-            List<Project> allProjects = db.Project.ToList();
-            ViewBag.NumOfNotifications = db.Notification.Where(n => n.projectId != null).Count();
-            return View(allProjects);
-            
-        }
-        public IActionResult Create()
-        {
-            ViewData["CompanyId"] = new SelectList(db.Company, "CompanyId", "CompanyId");
-            return View();
-        }
-
-        // POST: Projectstest/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Title,Content,CreatedTime,Deadline,CompanyId,IsComplete,Priority")] Project project)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Add(project);
-                await db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CompanyId"] = new SelectList(db.Company, "CompanyId", "CompanyId", project.CompanyId);
             return View(project);
         }
     }
