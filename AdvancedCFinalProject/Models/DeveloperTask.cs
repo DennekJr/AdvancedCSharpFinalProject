@@ -10,7 +10,7 @@ namespace AdvancedCFinalProject.Models
 		public string Title { get; set; }
 		public int? CompletionRate { get; set; }
 		public bool IsComplete { get; set; } = false;
-		public Priority? Priority { get; set; }
+		public Priority Priority { get; set; }
 		//public Comment? Comment { get; set; }
 		public DateTime Deadline { get; set; }
 		public int? DeveloperId { get; set; }
