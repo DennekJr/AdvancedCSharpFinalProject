@@ -12,10 +12,15 @@ namespace AdvancedCFinalProject.Models
 		public bool IsComplete { get; set; } = false;
 		public Priority Priority { get; set; }
 		//public Comment? Comment { get; set; }
+		public DateTime Deadline { get; set; }
 		public int? DeveloperId { get; set; }
 		public Developer? Developer { get; set; }
+		public int? projectId { get; set; }
+		public Project? Project { get; set; }
+		public ICollection<Notification> Notification { get; set; }
 		public DeveloperTask()
 		{
+			Notification = new HashSet<Notification>();
 		}
 	}
 }

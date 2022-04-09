@@ -25,17 +25,19 @@ namespace AdvancedCFinalProject.Models
 
 		public bool IsComplete { get; set; }
 
-		public Company Company { get; set; } 
+		public Company Company { get; set; }
 
 		public Priority? Priority { get; set; }
 
 		public ICollection<DeveloperTask> Tasks { get; set; }
-		
+		public ICollection<Notification> Notifications { get; set; }
+
 		public Project()
 		{
 			Deadline = System.DateTime.Now;
 			CreatedTime = System.DateTime.Now;
 			Tasks = new HashSet<DeveloperTask>();
+			Notifications = new HashSet<Notification>();
 		}
 
 

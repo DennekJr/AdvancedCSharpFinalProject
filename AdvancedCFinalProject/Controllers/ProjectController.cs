@@ -15,10 +15,67 @@ namespace AdvancedCFinalProject.Controllers
         {
             db = context;
         }
+        public async Task<IActionResult> ShowingNotification()
+        {
+            var AllNotifications = db.Notification.Where(n => n.projectId != null);
+            return View(AllNotifications);
 
+        }
+        public IActionResult MakingNotification()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult MakingNotification(int count)
+        {
+            var AllProjects = db.Project.Include(Project=> Project.Tasks);
+            foreach (var project in AllProjects)
+            {
+                var AllTasks = project.Tasks;
+                var notificationWithProject = db.Notification.Where(x => x.projectId == project.ProjectId);
+                var today = DateTime.Today;
+                var deadline = project.Deadline;
+                if ((today - deadline).Days > 0 && AllTasks.Any(task => task.IsComplete == false))
+                {
+                    if (!notificationWithProject.Any(n => n.Content == $"{project.Title} deadline passed with unfinshiedTask "))
+                    {
+                        var newNotification = new Notification();
+                        var UnfinishedTask = new Notification();                       
+                        newNotification.Content = $"{project.Title} deadline passed with unfinshiedTask ";
+                        newNotification.projectId = project.ProjectId;
+                        db.Notification.Add(newNotification);
+
+                    }
+
+                }
+
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
+        }
+        public IActionResult NotFinishedTAskList()
+        {
+            
+            var notFinishedTask = db.Tasks.Where(Tasks => Tasks.IsComplete == false);
+            var FinsihedDeadlineTasks = new List<DeveloperTask>();
+            foreach(var Task in notFinishedTask)
+            {
+                if ((Task.Deadline - DateTime.Today).Days <= 0)
+                {
+                    FinsihedDeadlineTasks.Add(Task);
+                }                
+
+            }
+            return View(FinsihedDeadlineTasks);
+
+
+        }
+        
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = db.Project;
+            ViewBag.NumOfNotifications = db.Notification.Where(n => n.projectId != null).Count();
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -62,6 +119,7 @@ namespace AdvancedCFinalProject.Controllers
                     return NotFound();
                 }
                 return View();
+                
             }
         }
 
