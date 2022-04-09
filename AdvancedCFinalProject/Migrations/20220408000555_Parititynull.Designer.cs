@@ -4,6 +4,7 @@ using AdvancedCFinalProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220408000555_Parititynull")]
+    partial class Parititynull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +58,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Company", b =>
@@ -73,7 +75,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Developer", b =>
@@ -90,7 +92,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("DeveloperId");
 
-                    b.ToTable("Developer", (string)null);
+                    b.ToTable("Developer");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
@@ -129,7 +131,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("projectId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Notification", b =>
@@ -162,7 +164,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("projectId");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>
@@ -201,7 +203,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Project", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

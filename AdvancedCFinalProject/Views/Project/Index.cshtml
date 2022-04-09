@@ -1,10 +1,14 @@
 ﻿@model IEnumerable<AdvancedCFinalProject.Models.Project>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
 <h1>Index</h1>
+<div class="col-md-10"style="text-align:right">
+    <label>Sort By:</label>
+<a asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notificatioins</a>
+</div>
+<div class="col-md-10"style="text-align:right">
+<a asp-action="NotFinishedTAskList">GoToTaskLIst of Notfinsihed Passed Deadline</a>
+ </div>
 
 <p>
     <a asp-action="CreateProject">Create New</a>

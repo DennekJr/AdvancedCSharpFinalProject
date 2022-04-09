@@ -4,6 +4,7 @@ using AdvancedCFinalProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220407214419_Deadlinetotaskandproject")]
+    partial class Deadlinetotaskandproject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +58,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Company", b =>
@@ -73,7 +75,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Developer", b =>
@@ -90,7 +92,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasKey("DeveloperId");
 
-                    b.ToTable("Developer", (string)null);
+                    b.ToTable("Developer");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
@@ -113,56 +115,26 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("Priority")
+                    b.Property<string>("Notification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("projectId")
-                        .HasColumnType("int");
-
                     b.HasKey("TaskId");
 
                     b.HasIndex("DeveloperId");
 
-                    b.HasIndex("projectId");
+                    b.HasIndex("ProjectId");
 
-                    b.ToTable("Tasks", (string)null);
-                });
-
-            modelBuilder.Entity("AdvancedCFinalProject.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DeveloperTaskTaskId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsOpned")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("projectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeveloperTaskTaskId");
-
-                    b.HasIndex("projectId");
-
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>
@@ -190,6 +162,9 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Notification")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Priority")
                         .HasColumnType("int");
 
@@ -201,7 +176,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Project", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -443,28 +418,11 @@ namespace AdvancedCFinalProject.Migrations
                         .WithMany("Tasks")
                         .HasForeignKey("DeveloperId");
 
-                    b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
+                    b.HasOne("AdvancedCFinalProject.Models.Project", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("projectId");
+                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Developer");
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("AdvancedCFinalProject.Models.Notification", b =>
-                {
-                    b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "DeveloperTask")
-                        .WithMany("Notification")
-                        .HasForeignKey("DeveloperTaskTaskId");
-
-                    b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
-                        .WithMany("Notifications")
-                        .HasForeignKey("projectId");
-
-                    b.Navigation("DeveloperTask");
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>
@@ -541,15 +499,8 @@ namespace AdvancedCFinalProject.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
-                {
-                    b.Navigation("Notification");
-                });
-
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>
                 {
-                    b.Navigation("Notifications");
-
                     b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
