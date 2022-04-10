@@ -15,10 +15,10 @@ namespace AdvancedCFinalProject.Controllers
     public class TaskController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
 
-        public TaskController(ApplicationDbContext context, UserManager<IdentityUser> _userManager, RoleManager<IdentityRole> _roleManager)
+        public TaskController(ApplicationDbContext context, UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> _roleManager)
         {
             _context = context;
             userManager = _userManager;
@@ -91,7 +91,7 @@ namespace AdvancedCFinalProject.Controllers
                     Value = name.Id,
                 });
             }
-            IdentityUser user = _context.Users.FirstOrDefault(x => x.Id == selectedDev);
+            ApplicationUser user = _context.Users.FirstOrDefault(x => x.Id == selectedDev);
             Developer newDev = new Developer
             {
                 Title = user.Email,

@@ -1,0 +1,6 @@
+﻿@model SelectList
+<h1>@ViewData["Title"]</h1>
+<form method="get" action="AllUsersInRole">
+    <select name="role" asp-items="Model"></select>
+    <button type="submit">Select Role</button>
+</form>

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AdvancedCFinalProject.Models.Project>
+
+@{
+    ViewData["Title"] = "ExceededBudget";
+}
+
+<h1>Projects Exceeding Budget</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Budget)
+            </th>
+            <th>
+                Amount spent
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            
+            <td>
+                $@Html.DisplayFor(modelItem => item.Budget)
+            </td>
+            <td>
+                $@ViewBag.TotalAmountSpent
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
