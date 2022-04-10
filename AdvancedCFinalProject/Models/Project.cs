@@ -22,11 +22,13 @@ namespace AdvancedCFinalProject.Models
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
 		public DateTime Deadline { get; set; }
 
-		public int CompanyId { get; set; }
+		public int? CompanyId { get; set; }
 
 		public bool IsComplete { get; set; }
 
-		public Company Company { get; set; }
+		public string? ProjectManager { get; set; }
+
+		public Company? Company { get; set; }
 
 		public Priority? Priority { get; set; }
 

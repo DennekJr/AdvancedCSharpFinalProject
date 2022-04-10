@@ -36,17 +36,25 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         // GET: Company/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await db.Company.Include(x => x.Projects)
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            var projectsForCompany = db.Project.Include(t => t.Tasks).Where(x => x.CompanyId == id);
-            ViewBag.companyProject = projectsForCompany;
+            var company = db.Company.Include(x => x.Projects)
+                .FirstOrDefault(m => m.CompanyId == id);
+            var projects = db.Project.Include(t => t.Tasks).Where(p => p.CompanyId == company.CompanyId);
+            var results = from p in company.Projects
+                                             group p.Tasks by p.ProjectId into g
+                                             select new { PersonId = g.Key, ProjectTasks = g.ToList() };
+            //foreach(var project in projectsForCompany)
+            //{
+            //    var h = project.Tasks.Where(x => x.projectId == project.ProjectId);
+
+            //}
+            ViewBag.companyProject = projects.ToList();
             if (company == null)
             {
                 return NotFound();

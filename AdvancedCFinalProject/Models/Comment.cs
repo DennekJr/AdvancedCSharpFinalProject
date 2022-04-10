@@ -12,10 +12,9 @@ namespace AdvancedCFinalProject.Models
 		public int? ProjectId { get; set; }
 		public DeveloperTask? Task { get; set; }
 		public int? TaskId { get; set; }
-		public int DeveloperId { get; set; }
-		public Developer Developer { get; set; }
-		public int DeveloperTaskId { get; set; }
-		public DeveloperTask DeveloperTask { get; set; }
+		public int? DeveloperId { get; set; }
+		public Developer? Developer { get; set; }
+		public int? DeveloperTaskId { get; set; }
 		public Comment()
 		{
 

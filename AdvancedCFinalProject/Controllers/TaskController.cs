@@ -17,6 +17,7 @@ namespace AdvancedCFinalProject.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        public int ProjId;
 
         public TaskController(ApplicationDbContext context, UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> _roleManager)
         {
@@ -28,6 +29,9 @@ namespace AdvancedCFinalProject.Controllers
         // GET: Task
         public async Task<IActionResult> Index()
         {
+            string userMail = User.Identity.Name;
+            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ViewBag.developer = user.Email;
             var applicationDbContext = _context.Tasks.Include(d => d.Developer);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -35,6 +39,8 @@ namespace AdvancedCFinalProject.Controllers
         // GET: Task/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string userMail = User.Identity.Name;
+            IdentityUser user = await userManager.FindByEmailAsync(userMail);
             if (id == null)
             {
                 return NotFound();
@@ -42,10 +48,20 @@ namespace AdvancedCFinalProject.Controllers
 
             var developerTask = await _context.Tasks
                 .Include(d => d.Developer)
+                .Include(c => c.Comment)
                 .FirstOrDefaultAsync(m => m.TaskId == id);
             if (developerTask == null)
             {
                 return NotFound();
+            }
+
+            if (developerTask.IsComplete && developerTask.Developer.Title == user.Email)
+            {
+                ViewBag.developer = user.Email;
+            }
+            if(developerTask.Comment != null)
+            {
+                ViewBag.comment = developerTask.Comment.Description;
             }
 
             return View(developerTask);
@@ -97,13 +113,18 @@ namespace AdvancedCFinalProject.Controllers
                 Title = user.Email,
             };
             developerTask.Developer = newDev;
-            ViewBag.Developers = developers;
-            Project project = _context.Project.FirstOrDefault(x => x.ProjectId == Pid);
-
+            
             if (ModelState.IsValid)
             {
-                _context.Add(developerTask);
-                project.Tasks.Add(developerTask);
+                if (Pid != null)
+                {
+                    developerTask.Project = _context.Project.FirstOrDefault(p => p.ProjectId == Pid);
+                    developerTask.ProjectId = (int)Pid;
+                    var project = developerTask.Project;
+                    project.Tasks.Add(developerTask);
+                }
+                ViewBag.Developers = developers;
+                _context.Tasks.Add(developerTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -111,14 +132,24 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         // GET: Task/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string? mail)
         {
             if (id == null)
             {
                 return NotFound();
             }
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
-            var developerTask = await _context.Tasks.FindAsync(id);
+            var developerTask = _context.Tasks.Include(d => d.Developer).First(x => x.TaskId == id);
+            string userMail = User.Identity.Name;
+            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            if (user.Email == developerTask.Developer.Title)
+            {
+                    ViewBag.mail = user.Email.ToString();
+
+            }
+
+            ProjId = (int)developerTask.ProjectId;
+
             if (developerTask == null)
             {
                 return NotFound();
@@ -127,13 +158,11 @@ namespace AdvancedCFinalProject.Controllers
             return View(developerTask);
         }
 
-        // POST: Task/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Title,CompletionRate,IsComplete,Priority,DeveloperId")] DeveloperTask developerTask)
+        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Title,CompletionRate,IsComplete,Priority,DeveloperId")] DeveloperTask developerTask, string? stringComment, string? UrgentComment)
         {
+            
             if (id != developerTask.TaskId)
             {
                 return NotFound();
@@ -143,7 +172,48 @@ namespace AdvancedCFinalProject.Controllers
             {
                 try
                 {
-                    _context.Update(developerTask);
+                    if (stringComment != null)
+                    {
+                        Comment newComment = new Comment
+                        {
+                            Developer = developerTask.Developer,
+                            Description = stringComment,
+                        };
+                        developerTask.Comment = newComment;
+                    }
+                    if (UrgentComment != null && !developerTask.IsComplete)
+                    {
+                        Urgent newNote = new Urgent
+                        {
+                            Developer = developerTask.Developer,
+                            Description = UrgentComment,
+                            IsURgent = true,
+                            UrgentNote = UrgentComment
+                        };
+                        developerTask.ProjectId = ProjId;
+                        developerTask.UrgentNote = newNote;
+                    }
+
+                    DeveloperTask taskToEdit = _context.Tasks.FirstOrDefault(t => t.TaskId == developerTask.TaskId);
+                    taskToEdit.Title = developerTask.Title;
+                    taskToEdit.CompletionRate = developerTask.CompletionRate;
+                    taskToEdit.IsComplete = developerTask.IsComplete;
+                    taskToEdit.Priority = developerTask.Priority;
+                    taskToEdit.DeveloperId = developerTask.DeveloperId;
+                    if (taskToEdit.IsComplete)
+                    {
+                        Notification TaskCompleteNotification = new Notification
+                        {
+                            DeveloperTask = taskToEdit,
+                            Content = $"{taskToEdit.Title} is Complete",
+                            projectId = taskToEdit.ProjectId,
+                            Project = _context.Project.FirstOrDefault(x => x.ProjectId == taskToEdit.ProjectId),
+                        };
+                        Project ProjectToSendNotificion = _context.Project.FirstOrDefault(x => x.ProjectId == taskToEdit.ProjectId);
+                        _context.Notification.Add(TaskCompleteNotification);
+                        ProjectToSendNotificion.Notifications.Add(TaskCompleteNotification);
+                    }
+                    _context.Update(taskToEdit);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
