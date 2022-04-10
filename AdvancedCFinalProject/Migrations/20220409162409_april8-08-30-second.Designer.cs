@@ -4,6 +4,7 @@ using AdvancedCFinalProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220409162409_april8-08-30-second")]
+    partial class april80830second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,9 +112,6 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<int?>("CompletionRate")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
 
@@ -125,15 +124,12 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UrgentComment")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("projectId")
+                        .HasColumnType("int");
 
                     b.Property<string>("stringComment")
                         .HasColumnType("nvarchar(max)");
@@ -142,7 +138,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("DeveloperId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("Tasks");
                 });
@@ -207,9 +203,6 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.Property<int?>("Priority")
                         .HasColumnType("int");
-
-                    b.Property<string>("ProjectManager")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -471,7 +464,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("projectId");
 
                     b.Navigation("Developer");
 

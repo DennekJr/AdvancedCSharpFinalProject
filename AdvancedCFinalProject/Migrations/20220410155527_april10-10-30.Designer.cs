@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220407232733_addprojectandtask")]
-    partial class addprojectandtask
+    [Migration("20220410155527_april10-10-30")]
+    partial class april101030
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,11 +36,15 @@ namespace AdvancedCFinalProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DeveloperId")
+                    b.Property<int?>("DeveloperId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DeveloperTaskId")
+                    b.Property<int?>("DeveloperTaskId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
@@ -52,13 +56,15 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasIndex("DeveloperId");
 
-                    b.HasIndex("DeveloperTaskId");
-
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("TaskId");
+                    b.HasIndex("TaskId")
+                        .IsUnique()
+                        .HasFilter("[TaskId] IS NOT NULL");
 
                     b.ToTable("Comments");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Comment");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Company", b =>
@@ -118,18 +124,24 @@ namespace AdvancedCFinalProject.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("projectId")
-                        .HasColumnType("int");
+                    b.Property<string>("UrgentComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("stringComment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TaskId");
 
                     b.HasIndex("DeveloperId");
 
-                    b.HasIndex("projectId");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tasks");
                 });
@@ -146,16 +158,16 @@ namespace AdvancedCFinalProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DeveloperTaskTaskId")
+                    b.Property<int?>("DeveloperTaskTaskId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsOpned")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TaskId")
+                    b.Property<int?>("TaskId")
                         .HasColumnType("int");
 
-                    b.Property<int>("projectId")
+                    b.Property<int?>("projectId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -175,7 +187,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"), 1L, 1);
 
-                    b.Property<int>("CompanyId")
+                    b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -194,6 +206,10 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.Property<int?>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProjectManager")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -408,31 +424,39 @@ namespace AdvancedCFinalProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AdvancedCFinalProject.Models.Urgent", b =>
+                {
+                    b.HasBaseType("AdvancedCFinalProject.Models.Comment");
+
+                    b.Property<bool>("IsURgent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UrgentNote")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("DeveloperTaskId")
+                        .IsUnique()
+                        .HasFilter("[DeveloperTaskId] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("Urgent");
+                });
+
             modelBuilder.Entity("AdvancedCFinalProject.Models.Comment", b =>
                 {
                     b.HasOne("AdvancedCFinalProject.Models.Developer", "Developer")
                         .WithMany("Comments")
-                        .HasForeignKey("DeveloperId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "DeveloperTask")
-                        .WithMany()
-                        .HasForeignKey("DeveloperTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeveloperId");
 
                     b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
 
                     b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId");
+                        .WithOne("Comment")
+                        .HasForeignKey("AdvancedCFinalProject.Models.Comment", "TaskId");
 
                     b.Navigation("Developer");
-
-                    b.Navigation("DeveloperTask");
 
                     b.Navigation("Project");
 
@@ -447,7 +471,7 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("projectId");
+                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Developer");
 
@@ -458,15 +482,11 @@ namespace AdvancedCFinalProject.Migrations
                 {
                     b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", "DeveloperTask")
                         .WithMany("Notification")
-                        .HasForeignKey("DeveloperTaskTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeveloperTaskTaskId");
 
                     b.HasOne("AdvancedCFinalProject.Models.Project", "Project")
                         .WithMany("Notifications")
-                        .HasForeignKey("projectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("projectId");
 
                     b.Navigation("DeveloperTask");
 
@@ -477,9 +497,7 @@ namespace AdvancedCFinalProject.Migrations
                 {
                     b.HasOne("AdvancedCFinalProject.Models.Company", "Company")
                         .WithMany("Projects")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId");
 
                     b.Navigation("Company");
                 });
@@ -535,6 +553,13 @@ namespace AdvancedCFinalProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AdvancedCFinalProject.Models.Urgent", b =>
+                {
+                    b.HasOne("AdvancedCFinalProject.Models.DeveloperTask", null)
+                        .WithOne("UrgentNote")
+                        .HasForeignKey("AdvancedCFinalProject.Models.Urgent", "DeveloperTaskId");
+                });
+
             modelBuilder.Entity("AdvancedCFinalProject.Models.Company", b =>
                 {
                     b.Navigation("Projects");
@@ -549,7 +574,11 @@ namespace AdvancedCFinalProject.Migrations
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.DeveloperTask", b =>
                 {
+                    b.Navigation("Comment");
+
                     b.Navigation("Notification");
+
+                    b.Navigation("UrgentNote");
                 });
 
             modelBuilder.Entity("AdvancedCFinalProject.Models.Project", b =>

@@ -5,43 +5,41 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AdvancedCFinalProject.Migrations
 {
-    public partial class Deadlinetotaskandproject : Migration
+    public partial class april101030third : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
-                name: "Deadline",
+                name: "CreatedTime",
                 table: "Tasks",
                 type: "datetime2",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<string>(
-                name: "Notification",
-                table: "Tasks",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Notification",
+            migrationBuilder.AlterColumn<string>(
+                name: "ProjectManager",
                 table: "Project",
                 type: "nvarchar(max)",
-                nullable: true);
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Deadline",
+                name: "CreatedTime",
                 table: "Tasks");
 
-            migrationBuilder.DropColumn(
-                name: "Notification",
-                table: "Tasks");
-
-            migrationBuilder.DropColumn(
-                name: "Notification",
-                table: "Project");
+            migrationBuilder.AlterColumn<string>(
+                name: "ProjectManager",
+                table: "Project",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
         }
     }
 }
