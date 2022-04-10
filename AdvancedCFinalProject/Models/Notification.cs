@@ -7,6 +7,9 @@
         public bool IsOpned { get; set; }
         public int? projectId { get; set; }
 
+        public int? DeveloperId { get; set; }
+        Developer? Developer { get; set; }
+        
         public Project? Project { get; set; }
         public int? TaskId { get; set; }
         public DeveloperTask? DeveloperTask { get; set; }

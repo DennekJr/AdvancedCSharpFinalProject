@@ -62,6 +62,7 @@ namespace AdvancedCFinalProject.Controllers
         public IActionResult MakingNotification(int count)
         {
             var Alltask = _context.Tasks;
+            
             foreach (var task in Alltask)
             {
                 var notificationWithtask = _context.Notification.Where(x => x.TaskId == task.TaskId);
@@ -74,6 +75,9 @@ namespace AdvancedCFinalProject.Controllers
                         var newNotification = new Notification();
                         newNotification.Content = $"{task.Title} deadline remained under 1 day";
                         newNotification.TaskId = task.TaskId;
+                        newNotification.DeveloperId = task.DeveloperId;
+                        Developer dev = _context.Developer.First(u => u.DeveloperId == task.DeveloperId);
+                        dev.Notifications.Add(newNotification);
                         _context.Notification.Add(newNotification);                        
 
                     }                   
