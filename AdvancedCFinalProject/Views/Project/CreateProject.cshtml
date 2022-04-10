@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateProject">
+        <form asp-action="CreateProject" asp-route-Cid="@ViewBag.Company">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <a style="display: none" asp-route-Cid="@ViewBag.Company">Company</a>
             <div class="form-group">
@@ -23,10 +23,20 @@
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Budget" class="control-label"></label>
+                <input asp-for="Budget" class="form-control" />
+                <span asp-validation-for="Budget" class="text-danger"></span>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsComplete" /> @Html.DisplayNameFor(model => model.IsComplete)
                 </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Manager" class="control-label"></label>
+                <select name="ManagerId" asp-items="@ViewBag.Users"></select>
+                <span asp-validation-for="Manager" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdvancedCFinalProject.Data;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace AdvancedCFinalProject.Models
@@ -30,6 +31,10 @@ namespace AdvancedCFinalProject.Models
 		public Company? Company { get; set; }
 
 		public Priority? Priority { get; set; }
+
+		public int Budget { get; set; }
+
+		public ApplicationUser? Manager { get; set; }
 
 		public ICollection<DeveloperTask> Tasks { get; set; }
 		public ICollection<Notification> Notifications { get; set; }

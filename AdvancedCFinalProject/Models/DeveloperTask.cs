@@ -10,6 +10,9 @@ namespace AdvancedCFinalProject.Models
 		public string Title { get; set; }
 		public int? CompletionRate { get; set; }
 		public bool IsComplete { get; set; } = false;
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
+		public DateTime CreatedTime { get; set; }
 		public Priority Priority { get; set; }
 		public string? stringComment { get; set; }
 		public string? UrgentComment { get; set; }

@@ -20,11 +20,9 @@ namespace AdvancedCFinalProject.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext db;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        User_Manager user_Manager;
-
-        public CompanyController(ILogger<HomeController> logger, ApplicationDbContext _db, RoleManager<IdentityRole> _roleManager, UserManager<IdentityUser> _userManager)
+        public CompanyController(ILogger<HomeController> logger, ApplicationDbContext _db, RoleManager<IdentityRole> _roleManager, UserManager<ApplicationUser> _userManager)
         {
             db = _db;
             roleManager = _roleManager;
@@ -186,7 +184,7 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewDeveloperTasks(int devId, int taskId, int? newRate, string? comment, bool? IsChecked = false)
+        public async Task<IActionResult> ViewDeveloperTasks(int? devId, int taskId, int? newRate, string? comment, bool? IsChecked = false)
         {
             if (devId == null)
             {
@@ -207,7 +205,7 @@ namespace AdvancedCFinalProject.Controllers
                 Comment newComment = new Comment
                 {
                     Description = comment,
-                    DeveloperId = devId,
+                    DeveloperId = (int)devId,
                     DeveloperTaskId = taskId,
                 };
                 db.Comments.Add(newComment);
@@ -221,7 +219,7 @@ namespace AdvancedCFinalProject.Controllers
         [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> TaskManager(string? id, int? addId, int? deleteId, int? editId, int? assignId)
         {
-            IdentityUser user = await userManager.FindByIdAsync(id);
+            ApplicationUser user = await userManager.FindByIdAsync(id);
             string role = "Project Manager";
             bool userIsInRole = await userManager.IsInRoleAsync(user, role);
             // get method
