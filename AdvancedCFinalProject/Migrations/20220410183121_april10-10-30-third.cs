@@ -8,13 +8,7 @@ namespace AdvancedCFinalProject.Migrations
     public partial class april101030third : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedTime",
-                table: "Tasks",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+        { 
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProjectManager",

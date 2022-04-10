@@ -26,7 +26,7 @@ namespace AdvancedCFinalProject.Models
 
 		public bool IsComplete { get; set; }
 
-		public string? ProjectManager { get; set; }
+		//public string? ProjectManager { get; set; }
 
 		public Company? Company { get; set; }
 
