@@ -11,7 +11,7 @@ namespace AdvancedCFinalProject.Models
 
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string newRole = new string("Project Manager");
             await roleManager.CreateAsync(new IdentityRole(newRole));
@@ -19,8 +19,8 @@ namespace AdvancedCFinalProject.Models
             string newRole2 = new string("Developer");
             await roleManager.CreateAsync(new IdentityRole(newRole2));
 
-            var passwordHasher = new PasswordHasher<IdentityUser>();
-            IdentityUser firstProjectManager = new IdentityUser
+            var passwordHasher = new PasswordHasher<ApplicationUser>();
+            ApplicationUser firstProjectManager = new ApplicationUser
             {
                 Email = "projectManager@company.ca",
                 NormalizedEmail = "PROJECTMANAGER@COMPANY.CA",
@@ -33,10 +33,10 @@ namespace AdvancedCFinalProject.Models
             await userManager.CreateAsync(firstProjectManager);
             await userManager.AddToRoleAsync(firstProjectManager, "Project Manager");
 
-            IdentityUser user1 = new IdentityUser { Email = "sam@gmail.com", NormalizedEmail = "SAM@GMAIL.COM", UserName = "sam@gmail.com", EmailConfirmed = true };
-            IdentityUser user2 = new IdentityUser { Email = "cat@gmail.com", NormalizedEmail = "CAT@GMAIL.COM", UserName = "cat@gmail.com", EmailConfirmed = true };
-            IdentityUser user3 = new IdentityUser { Email = "andre@gmail.com", NormalizedEmail = "ANDRE@GMAIL.COM", UserName = "andre@gmail.com", EmailConfirmed = true };
-            IdentityUser user4 = new IdentityUser { Email = "manager@gmail.com", NormalizedEmail = "MANAGER@GMAIL.COM", UserName = "manager@gmail.com", EmailConfirmed = true };
+            ApplicationUser user1 = new ApplicationUser { Email = "sam@gmail.com", NormalizedEmail = "SAM@GMAIL.COM", UserName = "sam@gmail.com", EmailConfirmed = true };
+            ApplicationUser user2 = new ApplicationUser { Email = "cat@gmail.com", NormalizedEmail = "CAT@GMAIL.COM", UserName = "cat@gmail.com", EmailConfirmed = true };
+            ApplicationUser user3 = new ApplicationUser { Email = "andre@gmail.com", NormalizedEmail = "ANDRE@GMAIL.COM", UserName = "andre@gmail.com", EmailConfirmed = true };
+            ApplicationUser user4 = new ApplicationUser { Email = "manager@gmail.com", NormalizedEmail = "MANAGER@GMAIL.COM", UserName = "manager@gmail.com", EmailConfirmed = true };
 
             var hashedPassword2 = passwordHasher.HashPassword(user1, "P@ssword1");
             user1.PasswordHash = hashedPassword2;

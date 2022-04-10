@@ -1,4 +1,5 @@
 ﻿using AdvancedCFinalProject.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -53,6 +54,7 @@ namespace AdvancedCFinalProject.Controllers
             }
         }
 
+        [Authorize(Roles = "Project Manager")]
         public IActionResult AddUserToRole()
         {
             ViewBag.Roles = new SelectList(roleManager.Roles);

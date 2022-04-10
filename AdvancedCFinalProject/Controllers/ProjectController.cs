@@ -1,5 +1,6 @@
 ﻿using AdvancedCFinalProject.Data;
 using AdvancedCFinalProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,10 +12,10 @@ namespace AdvancedCFinalProject.Controllers
     public class ProjectController : Controller
     {
         private readonly ApplicationDbContext db;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
 
-        public ProjectController(ApplicationDbContext context, UserManager<IdentityUser> _userManager)
+        public ProjectController(ApplicationDbContext context, UserManager<ApplicationUser> _userManager)
         {
             db = context;
             userManager = _userManager;
@@ -79,16 +80,17 @@ namespace AdvancedCFinalProject.Controllers
         public async Task<IActionResult> Index()
         {
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             var applicationDbContext = db.Project;
             ViewBag.NumOfNotifications = db.Notification.Count();
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> CreateProjectAsync(int? Cid)
+        [Authorize(Roles = "Project Manager")]
+        public async Task<IActionResult> CreateProject(int? Cid)
         {
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
             ViewBag.Company = comp.CompanyId;
@@ -99,14 +101,14 @@ namespace AdvancedCFinalProject.Controllers
         public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority")] Project project)
         {
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
             ViewBag.Company = comp.CompanyId;
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             if (ModelState.IsValid)
             {
                 project.CompanyId = comp.CompanyId;
-                project.ProjectManager = user.Email.ToString();
+                project.Manager = user;
                 comp.Projects.Add(project);
                 db.Project.Add(project);
                 await db.SaveChangesAsync();
@@ -115,6 +117,7 @@ namespace AdvancedCFinalProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> UpdateProject(int? id)
         {
             {
@@ -141,7 +144,7 @@ namespace AdvancedCFinalProject.Controllers
         {
             string userMail = User.Identity.Name;
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             if (id != project.ProjectId)
             {
                 return NotFound();
@@ -193,6 +196,7 @@ namespace AdvancedCFinalProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -215,8 +219,59 @@ namespace AdvancedCFinalProject.Controllers
 
         public IActionResult Details(int? id)
         {
-            Project project = db.Project.Find(id);
+            Project project = db.Project.Include("Manager").Include("Tasks").Include("Tasks.Developer").First(p => p.ProjectId == id);
+            int amountSpent = 0;
+            int managerSalary = (int)project.Manager.Salary;
+            int developerSalary = 0;
+            foreach (var task in project.Tasks)
+            {
+                int currentDate = DateTime.Now.Day;
+                int startDate = task.CreatedTime.Day;
+                int numberOfDays = currentDate - startDate;
+                ApplicationUser user = db.Users.First(x => x.Email == task.Developer.Title);
+                int salary = numberOfDays * (int)user.Salary;
+                developerSalary += salary;
+            }
+
+            amountSpent = developerSalary + managerSalary;
+
+            int totalBudget = project.Budget;
+
+            ViewBag.CompanyId = project.CompanyId;
+            ViewBag.TotalAmountSpent = amountSpent;
+            ViewBag.TotalBudget = totalBudget;
             return View(project);
+        }
+
+        public async Task<IActionResult> ExceededBudget()
+        {
+            List<Project> projects = new List<Project>();
+            var allProjects = await db.Project.Include("Manager").Include("Tasks").Include("Tasks.Developer").ToListAsync();
+            foreach (var project in allProjects)
+            {
+                int amountSpent = 0;
+                int managerSalary = (int)project.Manager.Salary;
+                int developerSalary = 0;
+                foreach (var task in project.Tasks)
+                {
+                    int currentDate = DateTime.Now.Day;
+                    int startDate = task.CreatedTime.Day;
+                    int numberOfDays = currentDate - startDate;
+                    ApplicationUser user = db.Users.First(x => x.Email == task.Developer.Title);
+                    int salary = numberOfDays * (int)user.Salary;
+                    developerSalary += salary;
+                }
+
+                amountSpent = developerSalary + managerSalary;
+
+                int totalBudget = project.Budget;
+                if (amountSpent > totalBudget)
+                {
+                    projects.Add(project);
+                }
+                ViewBag.TotalAmountSpent = amountSpent;
+            }
+            return View(projects);
         }
     }
 }

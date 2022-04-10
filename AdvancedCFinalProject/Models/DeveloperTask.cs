@@ -16,9 +16,6 @@ namespace AdvancedCFinalProject.Models
 		public Priority Priority { get; set; }
 		public string? stringComment { get; set; }
 		public string? UrgentComment { get; set; }
-		[DataType(DataType.Date)]
-		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]
-		public DateTime CreatedTime { get; set; }
 
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd")]

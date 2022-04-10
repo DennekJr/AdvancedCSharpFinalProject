@@ -30,7 +30,7 @@ namespace AdvancedCFinalProject.Controllers
         public async Task<IActionResult> Index()
         {
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             ViewBag.developer = user.Email;
             var applicationDbContext = _context.Tasks.Include(d => d.Developer);
             return View(await applicationDbContext.ToListAsync());
@@ -40,7 +40,7 @@ namespace AdvancedCFinalProject.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             if (id == null)
             {
                 return NotFound();
@@ -141,7 +141,7 @@ namespace AdvancedCFinalProject.Controllers
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
             var developerTask = _context.Tasks.Include(d => d.Developer).First(x => x.TaskId == id);
             string userMail = User.Identity.Name;
-            IdentityUser user = await userManager.FindByEmailAsync(userMail);
+            ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             if (user.Email == developerTask.Developer.Title)
             {
                     ViewBag.mail = user.Email.ToString();
