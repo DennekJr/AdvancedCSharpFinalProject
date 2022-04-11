@@ -8,6 +8,10 @@
 
 <p>
 <a asp-controller="Company" asp-action="DeveloperNotifications">Check Notifications - @ViewBag.NotiCount</a>
+<a asp-controller="Company" asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notifications</a>
+<a asp-controller="Company" asp-action="NotFinishedTAskList">Overdue Tasks</a>
+<a asp-controller="Project" asp-action="ExceededBudget">Projects exceeding budget</a>
+ </div>
 </p>
 <table class="table">
     <thead>

@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                @Html.DropDownList("YourProperty", (ViewBag.YourEnums as SelectList))
+                <select asp-for="Priority" asp-items="@ViewBag.YourEnums"></select>
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">

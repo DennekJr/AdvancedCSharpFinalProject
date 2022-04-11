@@ -56,8 +56,7 @@ namespace AdvancedCFinalProject.Controllers
 
             }
             db.SaveChanges();
-            return RedirectToAction("Index");
-
+            return RedirectToRoute(new { controller = "Company", action = "Index" });
         }
         public IActionResult NotFinishedTAskList(int? id)
         {
@@ -112,9 +111,9 @@ namespace AdvancedCFinalProject.Controllers
                 comp.Projects.Add(project);
                 db.Project.Add(project);
                 await db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute(new {controller = "Company", action = "Details", id = Cid});
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToRoute(new { controller = "Company", action = "Details", id = Cid });
         }
 
         [Authorize(Roles = "Project Manager")]
@@ -191,9 +190,9 @@ namespace AdvancedCFinalProject.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
         }
 
         [Authorize(Roles = "Project Manager")]
@@ -214,7 +213,7 @@ namespace AdvancedCFinalProject.Controllers
                 db.Project.Remove(project);
                 await db.SaveChangesAsync();
             }
-            return View(nameof(Index));
+            return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
         }
 
         public IActionResult Details(int? id)
