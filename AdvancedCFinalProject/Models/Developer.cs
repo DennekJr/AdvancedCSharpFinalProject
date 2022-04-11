@@ -10,10 +10,13 @@ namespace AdvancedCFinalProject.Models
 		public string Title { get; set; }
 		public ICollection<Comment> Comments { get; set; }
 		public ICollection<DeveloperTask> Tasks { get; set; }
+
+		public ICollection<Notification> Notifications { get; set; }
 		public Developer()
 		{
 			Tasks = new HashSet<DeveloperTask>();
 			Comments = new HashSet<Comment>();
+			Notifications = new HashSet<Notification>();
 		}
 	}
 }

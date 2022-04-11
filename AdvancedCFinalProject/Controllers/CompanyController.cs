@@ -231,19 +231,12 @@ namespace AdvancedCFinalProject.Controllers
             return View();
         }
 
+
         [Authorize(Roles = "Project Manager")]
         [HttpGet]
-        public IActionResult ProjDetails()
-        {
-
-            return View(_context.Project);
-        }
-
-        [Authorize(Roles = "Project Manager")]
-        [HttpPost]
         public IActionResult ProjDetails(int projId)
         {
-            Project project = _context.Project.Where(p => p.ProjectId == projId).Include(t => t.Tasks).First();
+            Project project = db.Project.Where(u => u.ProjectId == projId).Include(t => t.Tasks.OrderByDescending(p => p.CompletionRate)).First();
             if (project == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -253,10 +246,50 @@ namespace AdvancedCFinalProject.Controllers
         [Authorize(Roles = "Project Manager")]
         public IActionResult ProjManagerDashboard()
         {
-            List<Project> projects = db.Project.Include(p => p.Tasks).ToList();
+            string UserName = User.Identity.Name;
+            Developer DevUser = db.Developer.First(u => u.Title == UserName);
+            List<Notification> notifications = db.Notification.Where(u => u.DeveloperId == DevUser.DeveloperId).ToList();
+            ViewBag.NotiCount = notifications.Count;
+            List<Project> projects = db.Project.Include(p => p.Tasks.OrderByDescending(p => p.Priority)).ThenInclude(j => j.Developer).ToList();
             return View(projects);
         }
 
+        public IActionResult DeveloperNotifications()
+        {
+            string UserName = User.Identity.Name;
+            Developer DevUser = db.Developer.Where(u => u.Title == UserName).FirstOrDefault();
+            List<Notification> notifications = db.Notification.Where(u => u.DeveloperId == DevUser.DeveloperId).ToList();
+
+
+            return View(notifications);
+        }
+
+        public IActionResult HideCompleted()
+        {
+            foreach (var project in db.Project)
+            {
+                foreach(var task in project.Tasks)
+                {
+                    task.Hidden = true;
+                }
+            }
+            return RedirectToAction("ProjManagerDashboard");
+        }
+
+        public IActionResult ShowCompleted()
+        {
+            foreach (var project in db.Project)
+            {
+                foreach(var task in project.Tasks)
+                {
+                    if(task.IsComplete == true)
+                    {
+                        task.Hidden = false;
+                    }
+                }
+            }
+            return RedirectToAction("ProjManagerDashboard");
+        }
 
     }
 }

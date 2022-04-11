@@ -26,6 +26,8 @@ namespace AdvancedCFinalProject.Models
 		public Developer? Developer { get; set; }
 		public int? ProjectId { get; set; }
 		public Project? Project { get; set; }
+		
+		public bool? Hidden { get; set; }  
 		public ICollection<Notification> Notification { get; set; }
 		public DeveloperTask()
 		{

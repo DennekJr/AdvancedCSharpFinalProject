@@ -25,7 +25,8 @@ namespace AdvancedCFinalProject.Models
                 Email = "projectManager@company.ca",
                 NormalizedEmail = "PROJECTMANAGER@COMPANY.CA",
                 UserName = "projectManager@company.ca",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                Salary = 1000
             };
 
             var hashedPassword = passwordHasher.HashPassword(firstProjectManager, "P@ssword1");
@@ -33,10 +34,10 @@ namespace AdvancedCFinalProject.Models
             await userManager.CreateAsync(firstProjectManager);
             await userManager.AddToRoleAsync(firstProjectManager, "Project Manager");
 
-            ApplicationUser user1 = new ApplicationUser { Email = "sam@gmail.com", NormalizedEmail = "SAM@GMAIL.COM", UserName = "sam@gmail.com", EmailConfirmed = true };
-            ApplicationUser user2 = new ApplicationUser { Email = "cat@gmail.com", NormalizedEmail = "CAT@GMAIL.COM", UserName = "cat@gmail.com", EmailConfirmed = true };
-            ApplicationUser user3 = new ApplicationUser { Email = "andre@gmail.com", NormalizedEmail = "ANDRE@GMAIL.COM", UserName = "andre@gmail.com", EmailConfirmed = true };
-            ApplicationUser user4 = new ApplicationUser { Email = "manager@gmail.com", NormalizedEmail = "MANAGER@GMAIL.COM", UserName = "manager@gmail.com", EmailConfirmed = true };
+            ApplicationUser user1 = new ApplicationUser { Email = "sam@gmail.com", NormalizedEmail = "SAM@GMAIL.COM", UserName = "sam@gmail.com", EmailConfirmed = true, Salary = 300 };
+            ApplicationUser user2 = new ApplicationUser { Email = "cat@gmail.com", NormalizedEmail = "CAT@GMAIL.COM", UserName = "cat@gmail.com", EmailConfirmed = true, Salary = 300 };
+            ApplicationUser user3 = new ApplicationUser { Email = "andre@gmail.com", NormalizedEmail = "ANDRE@GMAIL.COM", UserName = "andre@gmail.com", EmailConfirmed = true, Salary = 300 };
+            ApplicationUser user4 = new ApplicationUser { Email = "manager@gmail.com", NormalizedEmail = "MANAGER@GMAIL.COM", UserName = "manager@gmail.com", EmailConfirmed = true, Salary = 1000 };
 
             var hashedPassword2 = passwordHasher.HashPassword(user1, "P@ssword1");
             user1.PasswordHash = hashedPassword2;

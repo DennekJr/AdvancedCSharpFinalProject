@@ -126,7 +126,7 @@ namespace AdvancedCFinalProject.Controllers
                 ViewBag.Developers = developers;
                 _context.Tasks.Add(developerTask);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute(new { controller = "Project", action = "Details", id = Pid });
             }
             return View(developerTask);
         }
@@ -227,7 +227,7 @@ namespace AdvancedCFinalProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute(new { controller = "Project", action = "Details", id = id });
             }
             ViewData["DeveloperId"] = new SelectList(_context.Developer, "DeveloperId", "DeveloperId", developerTask.DeveloperId);
             return View(developerTask);

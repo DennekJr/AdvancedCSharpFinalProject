@@ -23,6 +23,11 @@
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Budget" class="control-label"></label>
+                <input asp-for="Budget" class="form-control" />
+                <span asp-validation-for="Budget" class="text-danger"></span>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsComplete" /> @Html.DisplayNameFor(model => model.IsComplete)
@@ -30,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                @Html.DropDownList("YourProperty", (ViewBag.YourEnums as SelectList))
+                <select asp-for="Priority" asp-items="@ViewBag.YourEnums"></select>
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">

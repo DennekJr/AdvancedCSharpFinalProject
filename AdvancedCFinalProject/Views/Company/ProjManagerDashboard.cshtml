@@ -7,7 +7,11 @@
 <h1>Project Manager Dashboard</h1>
 
 <p>
-    <a asp-controller="Project" asp-action="CreateProject">Create New</a>
+<a asp-controller="Company" asp-action="DeveloperNotifications">Check Notifications - @ViewBag.NotiCount</a>
+<a asp-controller="Company" asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notifications</a>
+<a asp-controller="Company" asp-action="NotFinishedTAskList">Overdue Tasks</a>
+<a asp-controller="Project" asp-action="ExceededBudget">Projects exceeding budget</a>
+ </div>
 </p>
 <table class="table">
     <thead>
@@ -30,10 +34,12 @@
                 @foreach(var task in @item.Tasks)
                 {
                     <td>
-                        @task.Title
+                        @task.Title - Developer: @task.Developer.Title
                     </td>
                 }
-
+            <td>
+                <a asp-controller="Company" asp-action="ProjDetails" asp-route-projId="@item.ProjectId">Project Manager View</a>
+            </td>
         </tr>
 }
     </tbody>
