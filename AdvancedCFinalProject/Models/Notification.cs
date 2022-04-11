@@ -11,5 +11,8 @@
         public int? TaskId { get; set; }
         public DeveloperTask? DeveloperTask { get; set; }
 
+        public Developer? Developer { get; set; }
+        public int? DeveloperId { get; set; }
+
     }
 }

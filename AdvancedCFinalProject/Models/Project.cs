@@ -36,6 +36,8 @@ namespace AdvancedCFinalProject.Models
 
 		public ApplicationUser? Manager { get; set; }
 
+		public bool? Hidden { get; set; }
+
 		public ICollection<DeveloperTask> Tasks { get; set; }
 		public ICollection<Notification> Notifications { get; set; }
 
