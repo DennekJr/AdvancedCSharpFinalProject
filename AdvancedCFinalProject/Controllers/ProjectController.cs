@@ -98,7 +98,7 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority")] Project project)
+        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority,Budget")] Project project)
         {
             string userMail = User.Identity.Name;
             ApplicationUser user = await userManager.FindByEmailAsync(userMail);
@@ -214,12 +214,12 @@ namespace AdvancedCFinalProject.Controllers
                 db.Project.Remove(project);
                 await db.SaveChangesAsync();
             }
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Details(int? id)
         {
-            Project project = db.Project.Include("Manager").Include("Tasks").Include("Tasks.Developer").First(p => p.ProjectId == id);
+            Project project = db.Project.Include(p => p.Manager).Include(t => t.Tasks).ThenInclude(d => d.Developer).First(p => p.ProjectId == id);
             int amountSpent = 0;
             int managerSalary = (int)project.Manager.Salary;
             int developerSalary = 0;
