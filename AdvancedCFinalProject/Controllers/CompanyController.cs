@@ -268,9 +268,9 @@ namespace AdvancedCFinalProject.Controllers
         {
             foreach (var project in db.Project)
             {
-                if (project.IsComplete == true)
+                foreach(var task in project.Tasks)
                 {
-                    project.Hidden = true;
+                    task.Hidden = true;
                 }
             }
             return RedirectToAction("ProjManagerDashboard");
@@ -280,9 +280,12 @@ namespace AdvancedCFinalProject.Controllers
         {
             foreach (var project in db.Project)
             {
-                if (project.IsComplete == true)
+                foreach(var task in project.Tasks)
                 {
-                    project.Hidden = false;
+                    if(task.IsComplete == true)
+                    {
+                        task.Hidden = false;
+                    }
                 }
             }
             return RedirectToAction("ProjManagerDashboard");
