@@ -59,13 +59,13 @@
 @foreach(var task in Model.Tasks)
 {
     <ul>
-        <a asp-controller="Task" asp-action="Details" asp-route-id="@task.TaskId">@task.Title</a>
+        <a asp-controller="Task" asp-action="Details" asp-route-id="@task.TaskId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">@task.Title</a>
     </ul>
 }
 </div>
 <div>
 
-     <a asp-controller="Task" asp-action="Create" asp-route-Pid="@Model.ProjectId">New Task</a> |
-    <a asp-action="UpdateProject" asp-route-id="@Model?.ProjectId">Edit</a> |
-    <a asp-controller="Company" asp-action="Details" asp-route-id="@ViewBag.CompanyId">Back to List</a>
+     <a asp-controller="Task" asp-action="Create" asp-route-Pid="@Model.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">New Task</a> |
+    <a asp-action="UpdateProject" asp-route-id="@Model?.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Edit</a> |
+    <a asp-controller="Company" asp-action="Details" asp-route-id="@ViewBag.CompanyId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Back to List</a>
 </div>

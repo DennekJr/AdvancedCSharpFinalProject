@@ -39,7 +39,7 @@
                 <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
                 @if (!item.IsComplete)
                 {
-                    <a asp-action="NotFinishedTAskList" asp-route-id="@item.ProjectId">Expired Tasks</a>
+                    <a asp-action="NotFinishedTAskList" asp-route-id="@item.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Expired Tasks</a>
                 }
             </td>
         </tr>

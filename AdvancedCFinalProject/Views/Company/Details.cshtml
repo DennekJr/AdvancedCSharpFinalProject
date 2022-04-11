@@ -4,7 +4,6 @@
 
 
 <h1>@Model.Title</h1>
-<
  <h3>Projects</h3>
 <p>
     <a asp-controller="Project" asp-action="CreateProject" asp-route-Cid="@Model.CompanyId">Create New Project</a>
@@ -33,10 +32,10 @@
                     @Html.DisplayFor(modelItem => item.IsComplete)
                 </td>
                 <td>
-                    <a asp-controller="Project" asp-action="UpdateProject" asp-route-id="@item.ProjectId">Edit</a> |
-                    <a asp-controller="Project" asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
-                    <a asp-controller="Project" asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a> |
-                    <a asp-controller="Task" asp-action="Create" asp-route-Pid="@item.ProjectId">Create new Task</a>
+                    <a asp-controller="Project" asp-action="UpdateProject" asp-route-id="@item.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Edit</a> |
+                    <a asp-controller="Project" asp-action="Details" asp-route-id="@item.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Details</a> |
+                    <a asp-controller="Project" asp-action="Delete" asp-route-id="@item.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Delete</a> |
+                    <a asp-controller="Task" asp-action="Create" asp-route-Pid="@item.ProjectId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Create new Task</a>
                 </td>
             </tr>
 }
@@ -52,6 +51,6 @@
 
 <div>
 
-    <a asp-action="Edit" asp-route-id="@Model?.CompanyId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.CompanyId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Edit</a> |
+    <a asp-action="Index" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Back to List</a>
 </div>

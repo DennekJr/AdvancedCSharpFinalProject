@@ -61,9 +61,9 @@
                 @Html.DisplayFor(modelItem => item.Project.ProjectId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.TaskId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TaskId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TaskId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Delete</a>
             </td>
         </tr>
 }

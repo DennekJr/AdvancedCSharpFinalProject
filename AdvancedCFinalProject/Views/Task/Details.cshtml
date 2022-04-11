@@ -50,13 +50,17 @@
             </dd>
         }
 
-        @if (ViewBag.developer != null)
+        @if (Model.IsComplete)
         {
-            <a asp-action="Edit" asp-route-id="@Model?.TaskId" asp-route-mail="@ViewBag.developer">Leave Comment</a>
+            <a asp-action="Edit" asp-route-id="@Model?.TaskId" asp-route-mail="@ViewBag.developer" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 10px 25px; text-decoration: none ">Leave Comment</a>
+        }
+        else
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.TaskId" asp-route-mail="@ViewBag.developer" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 10px 25px; text-decoration: none ">Leave Urgent Note</a>
         }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.TaskId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.TaskId" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Edit</a> |
+    <a asp-action="Index" style="background-color: #333; border: none; border-radius: 5px; color: white; padding: 5px 10px; text-decoration: none">Back to List</a>
 </div>
