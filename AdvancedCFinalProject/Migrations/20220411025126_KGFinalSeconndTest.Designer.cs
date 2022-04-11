@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvancedCFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220411042805_UpdateDatabase")]
-    partial class UpdateDatabase
+    [Migration("20220411025126_KGFinalSeconndTest")]
+    partial class KGFinalSeconndTest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -188,9 +188,6 @@ namespace AdvancedCFinalProject.Migrations
 
                     b.Property<int?>("DeveloperId")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("Hidden")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");

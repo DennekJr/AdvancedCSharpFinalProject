@@ -31,6 +31,7 @@ namespace AdvancedCFinalProject.Models
 
             var hashedPassword = passwordHasher.HashPassword(firstProjectManager, "P@ssword1");
             firstProjectManager.PasswordHash = hashedPassword;
+            firstProjectManager.Salary = 7000;
             await userManager.CreateAsync(firstProjectManager);
             await userManager.AddToRoleAsync(firstProjectManager, "Project Manager");
 
@@ -41,21 +42,25 @@ namespace AdvancedCFinalProject.Models
 
             var hashedPassword2 = passwordHasher.HashPassword(user1, "P@ssword1");
             user1.PasswordHash = hashedPassword2;
+            user1.Salary = 3000;
             await userManager.CreateAsync(user1);
             await userManager.AddToRoleAsync(user1, "Developer");
 
             var hashedPassword3 = passwordHasher.HashPassword(user2, "P@ssword2");
             user2.PasswordHash = hashedPassword3;
+            user2.Salary = 4000;
             await userManager.CreateAsync(user2);
             await userManager.AddToRoleAsync(user2, "Developer");
 
             var hashedPassword4 = passwordHasher.HashPassword(user3, "P@ssword3");
             user3.PasswordHash = hashedPassword4;
+            user3.Salary = 5000;
             await userManager.CreateAsync(user3);
             await userManager.AddToRoleAsync(user3, "Developer");
 
             var hashedPassword5 = passwordHasher.HashPassword(user4, "P@ssword3");
             user4.PasswordHash = hashedPassword5;
+            user4.Salary = 6000;
             await userManager.CreateAsync(user4);
             await userManager.AddToRoleAsync(user4, "Project Manager");
 

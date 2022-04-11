@@ -97,8 +97,8 @@ namespace AdvancedCFinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Budget,Priority")] Project project)
-        {
+        public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority,Budget")] Project project)
+        { 
             string userMail = User.Identity.Name;
             ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
@@ -190,9 +190,9 @@ namespace AdvancedCFinalProject.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-                return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Project Manager")]
@@ -213,15 +213,13 @@ namespace AdvancedCFinalProject.Controllers
                 db.Project.Remove(project);
                 await db.SaveChangesAsync();
             }
-            return RedirectToRoute(new { controller = "Company", action = "Details", id = id });
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Details(int? id)
         {
-            Project project = db.Project.Include("Manager").Include("Tasks").Include("Tasks.Developer").First(p => p.ProjectId == id);
+            Project project = db.Project.Include(p => p.Manager).Include(t => t.Tasks).ThenInclude(d => d.Developer).First(p => p.ProjectId == id);
             int amountSpent = 0;
-            if(project.Manager.Salary != null)
-            {
                 int managerSalary = (int)project.Manager.Salary;
                 int developerSalary = 0;
                 foreach (var task in project.Tasks)
@@ -230,15 +228,12 @@ namespace AdvancedCFinalProject.Controllers
                     int startDate = task.CreatedTime.Day;
                     int numberOfDays = currentDate - startDate;
                     ApplicationUser user = db.Users.First(x => x.Email == task.Developer.Title);
-                    if (user.Salary != null)
-                    {
                         int salary = numberOfDays * (int)user.Salary;
                         developerSalary += salary;
                     }
                     
-                }
                 amountSpent = developerSalary + managerSalary;
-            }
+
             int totalBudget = project.Budget;
 
             ViewBag.CompanyId = project.CompanyId;
@@ -247,7 +242,6 @@ namespace AdvancedCFinalProject.Controllers
             return View(project);
         }
 
-        [Authorize(Roles = "Project Manager")]
         public async Task<IActionResult> ExceededBudget()
         {
             List<Project> projects = new List<Project>();

@@ -31,12 +31,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-                @foreach(var task in @item.Tasks)
+            <td>
+
+                @foreach (var task in @item.Tasks)
                 {
-                    <td>
+                    <div style="display:'flex'; flex-direction:'column'">
                         @task.Title - Developer: @task.Developer.Title
-                    </td>
+                    </div>
                 }
+            </td>
+
             <td>
                 <a asp-controller="Company" asp-action="ProjDetails" asp-route-projId="@item.ProjectId">Project Manager View</a>
             </td>
