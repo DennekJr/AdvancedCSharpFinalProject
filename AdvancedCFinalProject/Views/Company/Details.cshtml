@@ -4,13 +4,7 @@
 
 
 <h1>@Model.Title</h1>
-<div class="col-md-10"style="text-align:right">
-    <label>Sort By:</label>
-<a asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notifications</a>
-</div>
-<div class="col-md-10"style="text-align:right">
-<a asp-action="NotFinishedTAskList">Overdue Tasks</a>
- </div>
+<
  <h3>Projects</h3>
 <p>
     <a asp-controller="Project" asp-action="CreateProject" asp-route-Cid="@Model.CompanyId">Create New Project</a>

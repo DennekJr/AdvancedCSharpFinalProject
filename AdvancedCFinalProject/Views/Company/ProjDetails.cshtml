@@ -41,6 +41,18 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Priority)
         </dd>
+        <dt>
+            @foreach(var task in @Model.Tasks)
+            {
+                @if(task.Hidden != true)
+                {
+                    <dd>
+                        @task.Comment | Deadline: @task.Deadline | Priority: @task.Priority
+
+                    </dd>
+                }
+            }
+        </dt>
     </dl>
 </div>
 <div>

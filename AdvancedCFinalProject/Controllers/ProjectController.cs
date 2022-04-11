@@ -56,8 +56,7 @@ namespace AdvancedCFinalProject.Controllers
 
             }
             db.SaveChanges();
-            return RedirectToAction("Index");
-
+            return RedirectToRoute(new { controller = "Company", action = "Index" });
         }
         public IActionResult NotFinishedTAskList(int? id)
         {
@@ -99,7 +98,7 @@ namespace AdvancedCFinalProject.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateProject(int? Cid, [Bind("ProjectId,Title,Content,IsComplete,Priority,Budget")] Project project)
-        {
+        { 
             string userMail = User.Identity.Name;
             ApplicationUser user = await userManager.FindByEmailAsync(userMail);
             var comp = db.Company.FirstOrDefault(c => c.CompanyId == Cid);
@@ -112,9 +111,9 @@ namespace AdvancedCFinalProject.Controllers
                 comp.Projects.Add(project);
                 db.Project.Add(project);
                 await db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute(new {controller = "Company", action = "Details", id = Cid});
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToRoute(new { controller = "Company", action = "Details", id = Cid });
         }
 
         [Authorize(Roles = "Project Manager")]
@@ -140,7 +139,7 @@ namespace AdvancedCFinalProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProject(int id, [Bind("ProjectId,Title,Content,IsComplete,Priority")] Project project)
+        public async Task<IActionResult> UpdateProject(int id, [Bind("ProjectId,Title,Content,Budget,IsComplete,Priority")] Project project)
         {
             string userMail = User.Identity.Name;
             ViewBag.YourEnums = new SelectList(Enum.GetValues(typeof(Priority)), Priority.None);
@@ -221,19 +220,19 @@ namespace AdvancedCFinalProject.Controllers
         {
             Project project = db.Project.Include(p => p.Manager).Include(t => t.Tasks).ThenInclude(d => d.Developer).First(p => p.ProjectId == id);
             int amountSpent = 0;
-            int managerSalary = (int)project.Manager.Salary;
-            int developerSalary = 0;
-            foreach (var task in project.Tasks)
-            {
-                int currentDate = DateTime.Now.Day;
-                int startDate = task.CreatedTime.Day;
-                int numberOfDays = currentDate - startDate;
-                ApplicationUser user = db.Users.First(x => x.Email == task.Developer.Title);
-                int salary = numberOfDays * (int)user.Salary;
-                developerSalary += salary;
-            }
-
-            amountSpent = developerSalary + managerSalary;
+                int managerSalary = (int)project.Manager.Salary;
+                int developerSalary = 0;
+                foreach (var task in project.Tasks)
+                {
+                    int currentDate = DateTime.Now.Day;
+                    int startDate = task.CreatedTime.Day;
+                    int numberOfDays = currentDate - startDate;
+                    ApplicationUser user = db.Users.First(x => x.Email == task.Developer.Title);
+                        int salary = numberOfDays * (int)user.Salary;
+                        developerSalary += salary;
+                    }
+                    
+                amountSpent = developerSalary + managerSalary;
 
             int totalBudget = project.Budget;
 
