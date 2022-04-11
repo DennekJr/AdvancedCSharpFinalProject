@@ -1,0 +1,71 @@
+﻿@model AdvancedCFinalProject.Models.Project
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsComplete)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsComplete)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Priority)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+        @if(Model.IsComplete)
+        {
+            <dt class = "col-sm-2">
+                Total Amount Spent:
+            </dt>
+            <dd class = "col-sm-10">
+                $@ViewBag.TotalAmountSpent
+            </dd>
+        }
+        else
+        {
+            <dt class = "col-sm-2">
+                Budget:
+            </dt>
+            <dd class = "col-sm-10">
+                $@ViewBag.TotalBudget
+            </dd>
+            <dt class = "col-sm-2">
+                Amount Spent:
+            </dt>
+            <dd class = "col-sm-10">
+                $@ViewBag.TotalAmountSpent
+            </dd>
+        }
+
+    </dl>
+    <h4>Tasks</h4>
+
+@foreach(var task in Model.Tasks)
+{
+    <ul>
+        <a asp-controller="Task" asp-action="Details" asp-route-id="@task.TaskId">@task.Title</a>
+    </ul>
+}
+</div>
+<div>
+
+     <a asp-controller="Task" asp-action="Create" asp-route-Pid="@Model.ProjectId">New Task</a> |
+    <a asp-action="UpdateProject" asp-route-id="@Model?.ProjectId">Edit</a> |
+    <a asp-controller="Company" asp-action="Details" asp-route-id="@ViewBag.CompanyId">Back to List</a>
+</div>

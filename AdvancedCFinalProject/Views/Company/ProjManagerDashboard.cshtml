@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AdvancedCFinalProject.Models.Project>
+
+@{
+    ViewData["Title"] = "ProjManagerDashboard";
+}
+
+<h1>Project Manager Dashboard</h1>
+
+<p>
+<a asp-controller="Company" asp-action="DeveloperNotifications">Check Notifications - @ViewBag.NotiCount</a>
+<a asp-controller="Company" asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notifications</a>
+<a asp-controller="Company" asp-action="NotFinishedTAskList">Overdue Tasks</a>
+<a asp-controller="Project" asp-action="ExceededBudget">Projects exceeding budget</a>
+ </div>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                Tasks
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+
+                @foreach (var task in @item.Tasks)
+                {
+                    <div style="display:'flex'; flex-direction:'column'">
+                        @task.Title - Developer: @task.Developer.Title
+                    </div>
+                }
+            </td>
+
+            <td>
+                <a asp-controller="Company" asp-action="ProjDetails" asp-route-projId="@item.ProjectId">Project Manager View</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<a asp-controller="Company" asp-action="Index">Home</a>

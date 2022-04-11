@@ -12,6 +12,23 @@
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
     <None Remove="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
+    <None Remove="PrettierTestLogger" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\DeveloperTasks\Create.cshtml" />
+    <None Include="Views\DeveloperTasks\Delete.cshtml" />
+    <None Include="Views\DeveloperTasks\Details.cshtml" />
+    <None Include="Views\DeveloperTasks\Edit.cshtml" />
+    <None Include="Views\DeveloperTasks\Index.cshtml" />
+    <None Include="Views\DeveloperTasks\ShowingNotification.cshtml" />
+    <None Include="Views\Project\Create.cshtml" />
+    <None Include="Views\Project\CreateProject.cshtml" />
+    <None Include="Views\Project\Details.cshtml" />
+    <None Include="Views\Project\Index.cshtml" />
+    <None Include="Views\Project\NotFinishedTAskList.cshtml" />
+    <None Include="Views\Project\ShowingNotification.cshtml" />
+    <None Include="Views\Project\UpdateProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -30,6 +47,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
+    <PackageReference Include="PrettierTestLogger" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

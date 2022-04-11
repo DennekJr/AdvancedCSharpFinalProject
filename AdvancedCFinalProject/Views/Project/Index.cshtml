@@ -1,0 +1,48 @@
+﻿@model IEnumerable<AdvancedCFinalProject.Models.Project>
+
+
+<h1>Index</h1>
+<div class="col-md-10"style="text-align:right">
+    <label>Sort By:</label>
+<a asp-action="ShowingNotification">@ViewBag.NumOfNotifications Notificatioins</a>
+</div>
+<div class="col-md-10"style="text-align:right">
+ </div>
+
+<p>
+    <a asp-action="CreateProject">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsComplete)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsComplete)
+            </td>
+            <td>
+                <a asp-action="UpdateProject" asp-route-id="@item.ProjectId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                @if (!item.IsComplete)
+                {
+                    <a asp-action="NotFinishedTAskList" asp-route-id="@item.ProjectId">Expired Tasks</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

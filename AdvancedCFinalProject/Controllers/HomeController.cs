@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AdvancedCFinalProject.Models;
+using AdvancedCFinalProject.Helpers;
+using Microsoft.AspNetCore.Identity;
+using AdvancedCFinalProject.Data;
 
 namespace AdvancedCFinalProject.Controllers;
 
@@ -12,6 +15,7 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+
 
     public IActionResult Index()
     {
